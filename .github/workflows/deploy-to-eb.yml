@@ -1,10 +1,14 @@
 name: Deploy to Elastic Beanstalk
 
 on:
-  workflow_dispatch:  # Enables manual trigger
+  workflow_run:
+    workflows: ["Build Spring Boot App"]
+    types:
+      - completed
 
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
