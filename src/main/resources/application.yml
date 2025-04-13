@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: EmployeeReview
+
+---
+
+spring:
+  profiles:
+    active: local
+    
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://my-db.clmsoky8siy5.eu-north-1.rds.amazonaws.com:3306/dbrecord?useSSL=false
+    username: admin
+    password: Star#99ingg
+
+server:
+  port: 5000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
