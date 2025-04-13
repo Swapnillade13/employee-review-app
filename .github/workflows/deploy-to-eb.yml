@@ -33,6 +33,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: Empl-review-app
           environment_name: Empl-review-app-env
-          version_label: 0.33.0-v1
+          version_label: empl-review-v${{ github.run_number }}
           region: eu-north-1
           deployment_package: app.zip
