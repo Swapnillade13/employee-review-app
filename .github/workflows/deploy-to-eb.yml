@@ -1,0 +1,43 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  workflow_run:
+    workflows: ["Build Spring Boot App"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Zip JAR for deployment
+        run: |
+          mkdir deploy
+          cp target/*.jar deploy/application.jar
+          cd deploy
+          zip ../app.zip application.jar
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: Empl-review-app
+          environment_name: Empl-review-app-env
+          version_label: empl-review-v${{ github.run_number }}
+          region: eu-north-1
+          deployment_package: app.zip
