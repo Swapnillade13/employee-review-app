@@ -43,4 +43,19 @@ public class EmployeeReviewContoller {
 		
 	}
 	
+	@GetMapping("/addReview2")
+	public String addEmployeeReview2() {
+		EmployeeReview review = new EmployeeReview();
+		
+		review.setEmployeeName("Deepashri Pisal");
+		review.setDesignation("Senior Lead Engineer");
+		review.setEmployeeId("ID78711");
+		review.setReview("She is the great team leader and person...");
+		
+		employeeRepository.save(review);
+		
+		return "Employee Review Added Succssfully!";
+		
+	}
+	
 }
