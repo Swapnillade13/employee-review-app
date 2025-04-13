@@ -24,7 +24,8 @@ jobs:
         run: |
           mkdir deploy
           cp target/*.jar deploy/application.jar
-          zip -r app.zip deploy/
+          cd deploy
+          zip ../app.zip application.jar
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
