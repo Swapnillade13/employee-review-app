@@ -1,0 +1,38 @@
+name: Deploy to Elastic Beanstalk
+
+on:
+  workflow_dispatch:  # Enables manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Zip JAR for deployment
+        run: |
+          mkdir deploy
+          cp target/*.jar deploy/application.jar
+          zip -r app.zip deploy/
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: employee-review-app
+          environment_name: employee-review-env
+          version_label: v-${{ github.run_number }}
+          region: eu-north-1
+          deployment_package: app.zip
